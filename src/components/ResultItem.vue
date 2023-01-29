@@ -6,21 +6,13 @@
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { useQuizStore } from "@/stores/useQuiz";
+
 export default {
   name: "ResultItem",
-  props: ["results", "totalCorrect"],
   computed: {
-    resultIndex() {
-      let index = 0;
-
-      this.results.forEach((e, i) => {
-        if (e.min <= this.totalCorrect && e.max >= this.totalCorrect) {
-          index = i;
-        }
-      });
-
-      return index;
-    },
+    ...mapState(useQuizStore, ["results", "totalCorrect", "resultIndex"]),
   },
 };
 </script>

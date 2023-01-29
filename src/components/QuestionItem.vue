@@ -9,37 +9,44 @@
         {{ questionsAnswered }} of {{ questions.length }} questions answered
       </div>
     </div>
-    <transition-group name="fade">
+    <!-- <transition-group name="fade"> -->
+    <div
+      class="question-box"
+      v-for="(question, qi) in questions"
+      :key="question.q"
+      v-show="questionsAnswered === qi"
+    >
+      <div class="question">{{ question.q }}</div>
       <div
-        class="question-box"
-        v-for="(question, qi) in questions"
-        :key="question.q"
-        v-show="questionsAnswered === qi"
+        class="answer"
+        v-for="answer in question.answers"
+        :key="answer.text"
+        @click.prevent="selectAnswer(answer.is_correct)"
       >
-        <div class="question">{{ question.q }}</div>
-        <div
-          class="answer"
-          v-for="answer in question.answers"
-          :key="answer.text"
-          @click.prevent="selectAnswer(answer.is_correct)"
-        >
-          {{ answer.text }}
-        </div>
+        {{ answer.text }}
       </div>
-    </transition-group>
+    </div>
+    <!-- </transition-group> -->
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from "pinia";
+import { useQuizStore } from "@/stores/useQuiz";
+
 export default {
   name: "QuestionItem",
-  props: ["questions", "questionsAnswered"],
-  emits: ["question-answered"],
-  methods: {
-    selectAnswer(is_correct) {
-      this.$emit("question-answered", is_correct);
-    },
+  // props: ["questions", "questionsAnswered"],
+  // emits: ["question-answered"],
+  computed: {
+    ...mapState(useQuizStore, ["questions", "questionsAnswered"]),
   },
+  methods: {
+    ...mapActions(useQuizStore, ["questionAnswered"]),
+  },
+  // selectAnswer(is_correct) {
+  //   this.$emit("question-answered", is_correct);
+  // },
 };
 </script>
 
